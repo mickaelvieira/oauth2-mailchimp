@@ -1,0 +1,21 @@
+sudo: false # use container-based-infrastructure
+
+language: php
+
+php: [5.6, 7.0]
+
+install:
+  - travis_retry composer self-update
+  - travis_retry composer install
+
+script:
+  - mkdir -p build/logs
+  - php bin/phpcs --standard=PSR2 ./src/ --report=full
+  - php bin/phpspec run --format=pretty -v
+
+after_success:
+  - travis_retry php bin/coveralls -v
+
+cache:
+    directories:
+      - $HOME/.composer/cache

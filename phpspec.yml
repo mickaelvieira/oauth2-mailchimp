@@ -1,0 +1,5 @@
+suites:
+  default:
+    src_path: "src"
+    namespace: League\OAuth2\Client
+    psr4_prefix: League\OAuth2\Client
