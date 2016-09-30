@@ -1,22 +1,24 @@
 <?php
 
-namespace League\OAuth2\Client;
+namespace League\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class MailChimp
- * @package League\OAuth2\Client
+ * @package League\OAuth2\Client\Provider
  */
-class MailChimp extends AbstractProvider
+final class MailChimp extends AbstractProvider
 {
+    const DOMAIN = 'https://login.mailchimp.com';
+
     /**
      * {@inheritdoc}
      */
     public function getBaseAuthorizationUrl()
     {
+        return sprintf('%s/%s', self::DOMAIN, 'oauth2/authorize');
     }
 
     /**
@@ -24,6 +26,7 @@ class MailChimp extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
+        return sprintf('%s/%s', self::DOMAIN, 'oauth2/token');
     }
 
     /**
@@ -31,6 +34,7 @@ class MailChimp extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
+        return sprintf('%s/%s', self::DOMAIN, 'oauth2/metadata');
     }
 
     /**
@@ -38,6 +42,7 @@ class MailChimp extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
+        return null;
     }
 
     /**
@@ -52,5 +57,6 @@ class MailChimp extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
+        return new MailChimpResourceOwner($response);
     }
 }
