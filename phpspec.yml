@@ -3,3 +3,10 @@ suites:
     src_path: "src"
     namespace: League\OAuth2\Client
     psr4_prefix: League\OAuth2\Client
+
+extensions:
+  - PhpSpec\Extension\CodeCoverageExtension
+
+code_coverage:
+  format: clover
+  output: build/logs/clover.xml
