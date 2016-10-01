@@ -37,7 +37,7 @@ class MailChimpSpec extends ObjectBehavior
 
     function it_returns_the_resource_owner_details_url()
     {
-        $this->getResourceOwnerDetailsUrl(new AccessToken(['access_token' => '123456']))->shouldReturn('https://login.mailchimp.com/oauth2/metadata');
+        $this->getResourceOwnerDetailsUrl(new AccessToken(['access_token' => '123456']))->shouldReturn('https://us1.api.mailchimp.com/3.0');
     }
 
     function it_builds_the_authorization_url()
@@ -50,5 +50,4 @@ class MailChimpSpec extends ObjectBehavior
             'https://login.mailchimp.com/oauth2/authorize?state=123456&response_type=code&approval_prompt=auto&client_id=635959587059&redirect_uri=http%3A%2F%2F192.168.1.8%2Foauth%2Fcomplete.php'
         );
     }
-
 }

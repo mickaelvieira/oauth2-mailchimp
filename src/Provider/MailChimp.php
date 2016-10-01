@@ -2,6 +2,7 @@
 
 namespace League\OAuth2\Client\Provider;
 
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
 
@@ -11,14 +12,18 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class MailChimp extends AbstractProvider
 {
-    const DOMAIN = 'https://login.mailchimp.com';
+    const DC = 'us1';
+    const PROTOCOL        = 'https';
+    const DOMAIN          = 'mailchimp.com';
+    const OAUTH_SUBDOMAIN = 'login';
+    const API_SUBDOMAIN   = self::DC . '.api';
 
     /**
      * {@inheritdoc}
      */
     public function getBaseAuthorizationUrl()
     {
-        return sprintf('%s/%s', self::DOMAIN, 'oauth2/authorize');
+        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/authorize');
     }
 
     /**
@@ -26,7 +31,7 @@ final class MailChimp extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return sprintf('%s/%s', self::DOMAIN, 'oauth2/token');
+        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/token');
     }
 
     /**
@@ -34,7 +39,7 @@ final class MailChimp extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return sprintf('%s/%s', self::DOMAIN, 'oauth2/metadata');
+        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::API_SUBDOMAIN, self::DOMAIN, '3.0');
     }
 
     /**
@@ -50,6 +55,20 @@ final class MailChimp extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
+        if (array_key_exists('status', $data)) {
+
+            $status = (int)$data['status'];
+
+            if ($status >= 400) {
+
+                $title = $data['title'];
+                $detail = $data['detail'];
+
+                $error = sprintf('%s: %s', $title, $detail);
+
+                throw new IdentityProviderException($error, $status, $data);
+            }
+        }
     }
 
     /**
