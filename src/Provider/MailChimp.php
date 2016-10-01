@@ -12,11 +12,12 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class MailChimp extends AbstractProvider
 {
-    const DC = 'us1';
+
+    private $clientName;
+
     const PROTOCOL        = 'https';
     const DOMAIN          = 'mailchimp.com';
     const OAUTH_SUBDOMAIN = 'login';
-    const API_SUBDOMAIN   = self::DC . '.api';
 
     /**
      * {@inheritdoc}
@@ -39,7 +40,7 @@ final class MailChimp extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::API_SUBDOMAIN, self::DOMAIN, '3.0');
+        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/metadata');
     }
 
     /**
@@ -56,11 +57,9 @@ final class MailChimp extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data)
     {
         if (array_key_exists('status', $data)) {
-
             $status = (int)$data['status'];
 
             if ($status >= 400) {
-
                 $title = $data['title'];
                 $detail = $data['detail'];
 
@@ -77,5 +76,22 @@ final class MailChimp extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         return new MailChimpResourceOwner($response);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAuthorizationHeaders($token = null)
+    {
+        $headers = [
+            'Accept'        => 'application/json',
+            'Authorization' => sprintf('OAuth %s', $token)
+        ];
+
+        if ($this->clientName) {
+            $headers['User-Agent'] = $this->clientName;
+        }
+
+        return $headers;
     }
 }

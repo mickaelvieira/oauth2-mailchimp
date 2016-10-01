@@ -37,7 +37,8 @@ class MailChimpSpec extends ObjectBehavior
 
     function it_returns_the_resource_owner_details_url()
     {
-        $this->getResourceOwnerDetailsUrl(new AccessToken(['access_token' => '123456']))->shouldReturn('https://us1.api.mailchimp.com/3.0');
+        $this->getResourceOwnerDetailsUrl(new AccessToken(['access_token' => '123456']))
+            ->shouldReturn('https://login.mailchimp.com/oauth2/metadata');
     }
 
     function it_builds_the_authorization_url()

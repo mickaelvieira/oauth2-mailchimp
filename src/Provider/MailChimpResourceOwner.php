@@ -27,7 +27,23 @@ class MailChimpResourceOwner implements ResourceOwnerInterface
      */
     public function getId()
     {
-        return $this->response['account_id'];
+        return $this->response['user_id'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiEndPoint()
+    {
+        return $this->response['api_endpoint'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getLoginUrl()
+    {
+        return $this->response['login_url'];
     }
 
     /**
