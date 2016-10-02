@@ -111,7 +111,44 @@ class MailChimpSpec extends ObjectBehavior
         $owner->getLoginUrl()->shouldReturn('https://login.mailchimp.com');
     }
 
-    function it_should_throw_an_exception_when_the_api_return_an_response_containing_a_client_error()
+    function it_should_not_throw_an_exception_when_the_api_does_not_return_an_response_containing_a_client_error()
+    {
+        $fakeClient = (new Prophet())->prophesize('GuzzleHttp\ClientInterface');
+
+        $this->beConstructedWith([], ['httpClient' => $fakeClient]);
+
+        $request = (new Prophet())->prophesize('Psr\Http\Message\RequestInterface');
+        $response = (new Prophet())->prophesize('Psr\Http\Message\ResponseInterface');
+        $response->getHeader('content-type')->willReturn('application/json');
+
+        $body = '
+        {
+            "apps": [
+            {
+                "id": 248682284215,
+                "name": "MailChimp for Shopify",
+                "description": "MailChimp for Shopify is a free application that connects your Shopify store with your MailChimp account."
+            }
+            ]
+        }
+        ';
+
+        $response->getBody()->willReturn($body);
+
+        $fakeClient->send($request)->willReturn($response);
+
+        $this->getResponse($request)->shouldReturn([
+            'apps' => [
+                [
+                    "id" => 248682284215,
+                    "name" => "MailChimp for Shopify",
+                    "description" => "MailChimp for Shopify is a free application that connects your Shopify store with your MailChimp account."
+                ]
+            ]
+        ]);
+    }
+
+    function it_should_throw_an_exception_when_the_api_returns_an_response_containing_a_client_error()
     {
         $fakeClient = (new Prophet())->prophesize('GuzzleHttp\ClientInterface');
 
@@ -131,7 +168,7 @@ class MailChimpSpec extends ObjectBehavior
         $this->shouldThrow(new IdentityProviderException($message, 405, json_decode($body, true)))->during('getResponse', [$request]);
     }
 
-    function it_should_throw_an_exception_when_the_api_return_an_response_containing_a_server_error()
+    function it_should_throw_an_exception_when_the_api_returns_an_response_containing_a_server_error()
     {
         $fakeClient = (new Prophet())->prophesize('GuzzleHttp\ClientInterface');
 
