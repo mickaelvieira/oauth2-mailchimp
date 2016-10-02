@@ -12,19 +12,18 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class MailChimp extends AbstractProvider
 {
-
-    private $clientName;
+    /** @var string */
+    protected $clientName;
 
     const PROTOCOL        = 'https';
-    const DOMAIN          = 'mailchimp.com';
-    const OAUTH_SUBDOMAIN = 'login';
+    const DOMAIN          = 'login.mailchimp.com';
 
     /**
      * {@inheritdoc}
      */
     public function getBaseAuthorizationUrl()
     {
-        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/authorize');
+        return sprintf('%s://%s/%s', self::PROTOCOL, self::DOMAIN, 'oauth2/authorize');
     }
 
     /**
@@ -32,7 +31,7 @@ final class MailChimp extends AbstractProvider
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/token');
+        return sprintf('%s://%s/%s', self::PROTOCOL, self::DOMAIN, 'oauth2/token');
     }
 
     /**
@@ -40,7 +39,7 @@ final class MailChimp extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return sprintf('%s://%s.%s/%s', self::PROTOCOL, self::OAUTH_SUBDOMAIN, self::DOMAIN, 'oauth2/metadata');
+        return sprintf('%s://%s/%s', self::PROTOCOL, self::DOMAIN, 'oauth2/metadata');
     }
 
     /**
