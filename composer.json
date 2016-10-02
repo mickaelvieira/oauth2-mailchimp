@@ -1,6 +1,15 @@
 {
     "name": "mvieira/oauth2-mailchimp",
+    "description": "MailChimp OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
     "type": "library",
+    "keywords": [
+        "oauth",
+        "oauth2",
+        "client",
+        "authorization",
+        "authorisation",
+        "mailchimp"
+    ],
     "require": {
         "php": ">=5.6",
         "league/oauth2-client": "^1.4"
@@ -23,7 +32,13 @@
     "authors": [
         {
             "name": "Mickael Vieira",
-            "email": "contact@mickael-vieira.com"
+            "email": "contact@mickael-vieira.com",
+            "homepage": "https://github.com/mickaelvieira"
         }
-    ]
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
 }
